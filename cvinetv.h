@@ -1,7 +1,7 @@
 /*============================================================================*/
 /*                        L a b W i n d o w s / C V I                         */
 /*----------------------------------------------------------------------------*/
-/*    Copyright (c) National Instruments 2005-2014.  All Rights Reserved.     */
+/*    Copyright (c) National Instruments 2005-2009.  All Rights Reserved.     */
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /* Title:       cvinetv.h                                                     */
@@ -40,9 +40,7 @@ typedef _CNVReader *                        CNVReader;
 typedef _CNVAsyncReader *                   CNVAsyncReader;
 typedef _CNVBufferedWriter *                CNVBufferedWriter;
 typedef _CNVWriter *                        CNVWriter;
-#ifndef _LINK_CVI_LVRT_
 typedef _CNVBrowser *                       CNVBrowser;
-#endif
 
 #define CNVWaitForever      ((int)-1)
 #define CNVDoNotWait        ((int)-2)
@@ -124,9 +122,6 @@ typedef enum
     CNVNotAScalarError,
     CNVNotAStructError,
 
-	CNVInvalidPathError,
-	CNVInvalidFolderNameError,
-
     CNVErrorEnd,
     CNVErrorForceSizeTo32Bits                   = 0xffffffff
 
@@ -196,12 +191,11 @@ typedef enum
     CNVBrowseTypeFolder             = 4,
     CNVBrowseTypeItem               = 7,
     CNVBrowseTypeItemRange          = 8,
-    CNVBrowseTypeImplicitItem       = 17,   // Item whose path name is the same as its parent
+    CNVBrowseTypeImplicitItem       = 17,   // Item whose path name is the same as it's parent
 
     CNVBrowseType4Bytes             = 0xffffffff
 } CNVBrowseType;
 
-#ifndef _NI_linux_
 typedef enum
 {
     CNVVariableServerBufferMaxItemsAttribute    = 1,    // unsiged int [read-write]
@@ -211,7 +205,6 @@ typedef enum
 
     CNVVariableAttribute4Bytes      = 0xffffffff
 } CNVVariableAttribute;
-#endif
 
 typedef unsigned __int64 CNVDataQuality; 
 
@@ -318,7 +311,7 @@ int CVIFUNC CNVDispose(void * handle);
 // Data functions
 //-----------------------------------------------------------------------------
 int CVIFUNC CNVGetDataType(CNVData data, CNVDataType * type, 
-                unsigned int * numDimensions);
+                unsigned long * numDimensions);
 int CVIFUNC CNVGetArrayDataDimensions(CNVData data, 
                 size_t numDimensions, size_t dimensions[]);
 int CVIFUNC CNVGetScalarDataValue(CNVData data, CNVDataType type, void * value);
@@ -351,25 +344,20 @@ int CVIFUNC CNVGetDataQualityDescription(CNVDataQuality quality,
 int CVIFUNC CNVDisposeData(CNVData data);
 
 //-----------------------------------------------------------------------------
-// Browser functions
+// Browser functions - not supported on CVI real-time platforms
 //-----------------------------------------------------------------------------
-#ifndef _LINK_CVI_LVRT_
 int CVIFUNC CNVCreateBrowser(CNVBrowser * browser);
 int CVIFUNC CNVBrowse(CNVBrowser browser, const char * location);
 int CVIFUNC CNVBrowseNextItem(CNVBrowser browser, char ** item, int * leaf,
                               CNVBrowseType * browseType, CNVData * typeData);
 int CVIFUNC CNVDisposeBrowser(CNVBrowser browser);
-#ifndef _NI_linux_
 int CVIFUNC CNVRegisterMachine(const char * machine);
 int CVIFUNC CNVUnregisterMachine(const char * machine);
 int CVIFUNC CNVGetRegisteredMachines(char *** machines, unsigned int * numMachines);
-#endif
-#endif
 
 //-----------------------------------------------------------------------------
 // Configuration functions
 //-----------------------------------------------------------------------------
-#ifndef _NI_linux_
 int CVIFUNC CNVVariableEngineIsRunning(int * isRunning);
 
 // Process functions
@@ -382,29 +370,22 @@ int CVIFUNC CNVStopProcess(const char * processName);
 int CVIFUNC CNVProcessIsRunning(const char * processName, int * isRunning);
 
 // Variable functions
-int CVIFUNC CNVGetVariables(const char * parentPath, char *** variables, 
+int CVIFUNC CNVGetVariables(const char * processName, char *** variables, 
                             int * numVariables);
-int CVIFUNC CNVVariableExists(const char * parentPath, const char * variableName, 
+int CVIFUNC CNVVariableExists(const char * processName, const char * variableName, 
                               int * exists);
-int CVIFUNC CNVNewVariable(const char * parentPath, const char * variableName);
-int CVIFUNC CNVNewVariableCollection(const char * parentPath, size_t numVariables,
+int CVIFUNC CNVNewVariable(const char * processName, const char * variableName);
+int CVIFUNC CNVNewVariableCollection(const char * processName, size_t numVariables,
                                      const char * variableNames[], 
                                      unsigned int maxBufferItems, int singleWriter);
-int CVIFUNC CNVDeleteVariable(const char * parentPath, const char * variableName);
-int CVIFUNC CNVGetVariableAttribute(const char * parentPath, 
+int CVIFUNC CNVDeleteVariable(const char * processName, const char * variableName);
+int CVIFUNC CNVGetVariableAttribute(const char * processName, 
                                     const char * variableName, 
                                     CNVVariableAttribute attribute,
                                     void * value);
-int CVIFUNC_C CNVSetVariableAttribute(const char * parentPath, 
+int CVIFUNC_C CNVSetVariableAttribute(const char * processName, 
                                       const char * variableName, 
                                       CNVVariableAttribute attribute, ...);
-
-// Folder functions
-int CVIFUNC CNVGetFolders(const char * parentPath, char *** folders, int * numFolders);
-int CVIFUNC CNVFolderExists(const char * parentPath, const char * folderName, int * exists);
-int CVIFUNC CNVNewFolder(const char * parentPath, const char * folderName);
-int CVIFUNC CNVDeleteFolder(const char * parentPath, const char *folderName);
-#endif
 
 //-----------------------------------------------------------------------------
 // Miscellaneous functions

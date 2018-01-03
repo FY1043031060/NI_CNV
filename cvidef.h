@@ -1,7 +1,7 @@
 /*============================================================================*/
 /*                        L a b W i n d o w s / C V I                         */
 /*----------------------------------------------------------------------------*/
-/*    Copyright (c) National Instruments 1987-2014.  All Rights Reserved.     */
+/*    Copyright (c) National Instruments 1987-2010.  All Rights Reserved.     */
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /* Title:       cvidef.h                                                      */
@@ -13,7 +13,7 @@
 #define _CVIDEF_H
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 /*
@@ -60,7 +60,7 @@
 
 #elif defined(sparc)
     #if !defined(_NI_sparc_)
-		#define _NI_sparc_	1 /* assume SunOS 4.x */
+        #define _NI_sparc_  1 /* assume SunOS 4.x */
     #endif
 #endif
 
@@ -105,11 +105,11 @@
         #define DLLEXPORT __declspec(dllexport)
     #endif
 
-	/* This is here for external compilers. In CVI (as of version 5.0) */
-	/* _CVI_USE_FUNCS_FOR_VARS_ is a predefined macro.                 */
-	#if !defined(_CVI_USE_FUNCS_FOR_VARS_) && !defined(_CVI_DEBUG_)
-		#define _CVI_USE_FUNCS_FOR_VARS_	1
-	#endif
+    /* This is here for external compilers. In CVI (as of version 5.0) */
+    /* _CVI_USE_FUNCS_FOR_VARS_ is a predefined macro.                 */
+    #if !defined(_CVI_USE_FUNCS_FOR_VARS_) && !defined(_CVI_DEBUG_)
+        #define _CVI_USE_FUNCS_FOR_VARS_    1
+    #endif
 
     #define CVICDECL __cdecl
 
@@ -148,68 +148,68 @@
         /* Constants from winbase.h for the multithreading utilities.    */
         /*****************************************************************/
         #if !defined (_WINDEF_) && !defined (_WINDOWS_) /* a little safer (no warnings) */
-			#ifndef THREAD_BASE_PRIORITY_LOWRT
-			#define THREAD_BASE_PRIORITY_LOWRT  15
-			#endif
-			#ifndef THREAD_BASE_PRIORITY_MAX
-			#define THREAD_BASE_PRIORITY_MAX    2
-			#endif
-			#ifndef THREAD_BASE_PRIORITY_MIN
-			#define THREAD_BASE_PRIORITY_MIN    (-2)
-			#endif
-			#ifndef THREAD_BASE_PRIORITY_IDLE
-			#define THREAD_BASE_PRIORITY_IDLE   (-15)
-			#endif
-		#endif
+            #ifndef THREAD_BASE_PRIORITY_LOWRT
+            #define THREAD_BASE_PRIORITY_LOWRT  15
+            #endif
+            #ifndef THREAD_BASE_PRIORITY_MAX
+            #define THREAD_BASE_PRIORITY_MAX    2
+            #endif
+            #ifndef THREAD_BASE_PRIORITY_MIN
+            #define THREAD_BASE_PRIORITY_MIN    (-2)
+            #endif
+            #ifndef THREAD_BASE_PRIORITY_IDLE
+            #define THREAD_BASE_PRIORITY_IDLE   (-15)
+            #endif
+        #endif
 
         #ifndef THREAD_PRIORITY_TIME_CRITICAL
-		#define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
-		#endif
-		#ifndef THREAD_PRIORITY_HIGHEST
-		#define THREAD_PRIORITY_HIGHEST       THREAD_BASE_PRIORITY_MAX
-		#endif
-		#ifndef THREAD_PRIORITY_ABOVE_NORMAL
-		#define THREAD_PRIORITY_ABOVE_NORMAL  (THREAD_PRIORITY_HIGHEST-1)
-		#endif
-		#ifndef THREAD_PRIORITY_NORMAL
-		#define THREAD_PRIORITY_NORMAL        0
-		#endif
-		#ifndef THREAD_PRIORITY_BELOW_NORMAL
-		#define THREAD_PRIORITY_BELOW_NORMAL (THREAD_PRIORITY_LOWEST+1)
-		#endif
-		#ifndef THREAD_PRIORITY_LOWEST
-		#define THREAD_PRIORITY_LOWEST       THREAD_BASE_PRIORITY_MIN
-		#endif
-		#ifndef THREAD_PRIORITY_IDLE
-		#define THREAD_PRIORITY_IDLE         THREAD_BASE_PRIORITY_IDLE
-		#endif
+        #define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
+        #endif
+        #ifndef THREAD_PRIORITY_HIGHEST
+        #define THREAD_PRIORITY_HIGHEST       THREAD_BASE_PRIORITY_MAX
+        #endif
+        #ifndef THREAD_PRIORITY_ABOVE_NORMAL
+        #define THREAD_PRIORITY_ABOVE_NORMAL  (THREAD_PRIORITY_HIGHEST-1)
+        #endif
+        #ifndef THREAD_PRIORITY_NORMAL
+        #define THREAD_PRIORITY_NORMAL        0
+        #endif
+        #ifndef THREAD_PRIORITY_BELOW_NORMAL
+        #define THREAD_PRIORITY_BELOW_NORMAL (THREAD_PRIORITY_LOWEST+1)
+        #endif
+        #ifndef THREAD_PRIORITY_LOWEST
+        #define THREAD_PRIORITY_LOWEST       THREAD_BASE_PRIORITY_MIN
+        #endif
+        #ifndef THREAD_PRIORITY_IDLE
+        #define THREAD_PRIORITY_IDLE         THREAD_BASE_PRIORITY_IDLE
+        #endif
 
         /************************************/
         /* Defines from winnt.h / winbase.h */
         /************************************/
         #ifndef _WINDEF_ /* a little safer (no warnings) */
-			#if defined (_MSC_VER) && (_MSC_VER >= 1200)
-				#if defined (STRICT) || !defined (NO_STRICT) || defined (_CVI_)
-					#define _CVI_DO_STRICT
-				#endif
-			#else
-				#if defined(STRICT) || defined(_CVI_)
-					#define _CVI_DO_STRICT
-				#endif
-			#endif
-			#if defined (_CVI_DO_STRICT)
+            #if defined (_MSC_VER) && (_MSC_VER >= 1200)
+                #if defined (STRICT) || !defined (NO_STRICT) || defined (_CVI_)
+                    #define _CVI_DO_STRICT
+                #endif
+            #else
+                #if defined(STRICT) || defined(_CVI_)
+                    #define _CVI_DO_STRICT
+                #endif
+            #endif
+            #if defined (_CVI_DO_STRICT)
                 struct HINSTANCE__;
                 typedef struct HINSTANCE__  *HINSTANCE;
             #else
                 typedef void                *HINSTANCE;
             #endif
             typedef int                     BOOL;
-			typedef unsigned long           DWORD;
-			typedef void                    *LPVOID;
+            typedef unsigned long           DWORD;
+            typedef void                    *LPVOID;
         #endif
         #ifndef _WINNT_ /* a little safer (no warnings) */
             typedef char                    *LPSTR;
-			typedef void					*HANDLE;
+            typedef void                    *HANDLE;
         #endif
     #endif  /* ndef CVI_EXCLUDE_WINDOWS_TYPES */
 #else
@@ -226,13 +226,6 @@
     #define CVIFUNCPTRVAR
     #define DLLSTDCALL
 
-    #define THREAD_PRIORITY_NORMAL		0
-    #define THREAD_PRIORITY_HIGHEST		THREAD_PRIORITY_NORMAL
-    #define THREAD_PRIORITY_ABOVE_NORMAL	THREAD_PRIORITY_NORMAL
-    #define THREAD_PRIORITY_BELOW_NORMAL	THREAD_PRIORITY_NORMAL
-    #define THREAD_PRIORITY_LOWEST		THREAD_PRIORITY_NORMAL
-    #define THREAD_PRIORITY_IDLE		THREAD_PRIORITY_NORMAL
-
 #endif /* defined(_NI_mswin32_) (else clause) */
 
 #ifdef _NI_unix_
@@ -244,30 +237,30 @@
 /* The macro _cvi_SYSINCLUDE() defined below is used to include
  * header files from the standard location "/usr/include".
  */
-#define _cvi_SYSINCLUDEDIR	/usr/include/
+#define _cvi_SYSINCLUDEDIR  /usr/include/
 
 #define _cvi_concat(dir, file)    dir ## file
-#define _cvi_CONCAT(dir, file)	  _cvi_concat(dir, file)
+#define _cvi_CONCAT(dir, file)    _cvi_concat(dir, file)
 
 #define _cvi_string(x)       # x
 #define _cvi_STRING(x)       _cvi_string(x)
 
-#define _cvi_SYSINCLUDE(file)	_cvi_STRING(_cvi_CONCAT(_cvi_SYSINCLUDEDIR, file))
+#define _cvi_SYSINCLUDE(file)   _cvi_STRING(_cvi_CONCAT(_cvi_SYSINCLUDEDIR, file))
 
 #endif /* def _NI_unix_ */
 
 /*
- * Beginning of defines which are always done
+ * Begining of defines which are always done
  */
 
-#define _CVI_LIBS_	1302
+#define _CVI_LIBS_  911
 #if _CVI_ > _CVI_LIBS_
 #error _CVI_LIBS is out of date
 #endif
 
 #define cviprefix(c) CVI_ ## c
 
-#if !defined(_INTPTR_T_DEFINED) && !defined(__intptr_t_defined)
+#ifndef _INTPTR_T_DEFINED
 #ifdef  _NI_mswin64_
 typedef __int64             intptr_t;
 #else
@@ -276,7 +269,7 @@ typedef int                 intptr_t;
 #define _INTPTR_T_DEFINED
 #endif
 
-#if !defined(_UINTPTR_T_DEFINED) && !defined(__intptr_t_defined)
+#ifndef _UINTPTR_T_DEFINED
 #ifdef  _NI_mswin64_
 typedef unsigned __int64    uintptr_t;
 #else
@@ -294,12 +287,12 @@ typedef unsigned int        size_t;
 #endif
 #endif
 
-#if !defined(_SSIZE_T_DEFINED) && !defined(__ssize_t_defined)
+#ifndef _SSIZE_T_DEFINED
 #define _SSIZE_T_DEFINED
 #ifdef _NI_mswin64_
-typedef __int64				ssize_t;
+typedef __int64             ssize_t;
 #else
-typedef int					ssize_t;
+typedef int                 ssize_t;
 #endif
 #endif
 
