@@ -11,12 +11,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = untitled41
 TEMPLATE = app
 LIBS += -L$$PWD -lcvinetv
-LIBS += -L$$PWD -lvisa32
-LIBS += -L$$PWD -lcvintwrk
+#LIBS += -L$$PWD -lvisa32
+#LIBS += -L$$PWD -lcvintwrk
 LIBS += -L$$PWD -lcvi
-LIBS += -L$$PWD -lcviwmain
-LIBS += -L$$PWD -lcvisupp
-LIBS += -L$$PWD -lcvirt
+#LIBS += -L$$PWD -lcviwmain
+#LIBS += -L$$PWD -lcvisupp
+#LIBS += -L$$PWD -lcvirt
 INCLUDEPATH += $$PWD
 
 # The following define makes your compiler emit warnings if you use
