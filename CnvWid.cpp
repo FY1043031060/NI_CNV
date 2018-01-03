@@ -1,13 +1,14 @@
 #include "CnvWid.h"
 #include <QDebug>
 #include <QTreeWidgetItem>
+#include <QHash>
 void CnvWid::getErrorDescripter(int status)
 {
     if(status < 0)
          qDebug() << __FUNCTION__<< CNVGetErrorDescription(status);
 }
 
-void CnvWid::searchRecursivly(CNVBrowser cnvbrowser, const char* strPath)
+void CnvWid::searchRecursivly(CNVBrowser cnvbrowser, const char* strPath, QTreeWidgetItem* pParentItem)
 {
     int status = 0;
     int leaf = 0;
@@ -29,6 +30,7 @@ void CnvWid::searchRecursivly(CNVBrowser cnvbrowser, const char* strPath)
         strTemp +=("\\");
     }
     QList<QString> listPath;
+    QHash<QString, QTreeWidgetItem*> hashPath;
     for(status =1; status == 1;)
     {
         ////	int CVIFUNC CNVBrowseNextItem(
@@ -43,7 +45,7 @@ void CnvWid::searchRecursivly(CNVBrowser cnvbrowser, const char* strPath)
 
         if(status == 1 && (eBroweType != CNVBrowseTypeUndefined))
         {
-#if 0
+#if 1
             unsigned int	nDims;
             CNVDataType		type;
             CNVGetDataType(typeData, &type, &nDims);
@@ -59,17 +61,24 @@ void CnvWid::searchRecursivly(CNVBrowser cnvbrowser, const char* strPath)
                    <<"path:" << str;
             listPath.append(str);
             {
-//                QTreeWidgetItem* pItem = new QTreeWidgetItem(pParentItem);
-//                pItem->setData(0, Qt::DisplayRole, QVariant::fromValue(str));
-//                pItem->setText(0, strNameTmp);
-//                pItem->setText(1, QString("%1").arg(eBroweType));
+                QTreeWidgetItem* pItem = new QTreeWidgetItem(pParentItem);
+                pItem->setData(0, Qt::UserRole, QVariant::fromValue(str));
+                qDebug() << __FUNCTION__ << pItem->data(0, Qt::UserRole);
+                pItem->setText(0, strNameTmp);
+                pItem->setText(1, QString("%1").arg(eBroweType));
+                pItem->setText(2, QString("%1").arg(type));
+                if(pParentItem == Q_NULLPTR)
+                    ui.treeWidget->addTopLevelItem(pItem);
+                else
+                    pParentItem->addChild(pItem);
+                hashPath.insert(str, pItem);
             }
         }
         CNVFreeMemory(strName);
     }
-    for(int index = 0;index < listPath.size();index++)
+    for(int index = 0; index < hashPath.size(); index++)
     {
-        searchRecursivly(cnvbrowser, listPath.value(index).toLocal8Bit().data());
+        searchRecursivly(cnvbrowser, listPath.value(index).toLocal8Bit().data(), hashPath.value(listPath.value(index)));
     }
 }
 
@@ -82,7 +91,10 @@ CnvWid::CnvWid(QWidget *parent) :
     status = CNVCreateBrowser(&cnvbrowser);
     getErrorDescripter(status);
 
-    searchRecursivly(cnvbrowser, NULL);
+    searchRecursivly(cnvbrowser, NULL, NULL);
     status = CNVDisposeBrowser(cnvbrowser);
     getErrorDescripter(status);
+    connect(ui.treeWidget, &QTreeWidget::itemActivated,[&](QTreeWidgetItem *item, int column){
+        ui.label->setText(item->data(column,  Qt::UserRole).toString());
+    });
 }

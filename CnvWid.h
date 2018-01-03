@@ -13,7 +13,7 @@ class CnvWid : public QWidget
 public:
     explicit CnvWid(QWidget *parent = 0);
 
-    void searchRecursivly(CNVBrowser cnvbrowser, const char *strPath);
+    void searchRecursivly(CNVBrowser cnvbrowser, const char *strPath, QTreeWidgetItem *pParentItem);
 
 private:
     Ui::CnvWid ui;
