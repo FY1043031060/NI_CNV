@@ -1,10 +1,9 @@
-#include "CnvWid.h"
 #include <QApplication>
-
+#include <CustCNVEditor.h>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CnvWid w;
+    CustCNVEditor w;
     w.show();
 
     return a.exec();

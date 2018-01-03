@@ -11,7 +11,8 @@ public:
     explicit CnvWid(QWidget *parent = 0);
 
     void searchRecursivly(CNVBrowser cnvbrowser, const char *strPath, QTreeWidgetItem *pParentItem);
-
+Q_SIGNALS:
+    void emitCNVPath(QString strPath);
 private:
     Ui::CnvWid ui;
     void getErrorDescripter(int status);

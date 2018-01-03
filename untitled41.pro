@@ -11,12 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = untitled41
 TEMPLATE = app
 LIBS += -L$$PWD -lcvinetv
-#LIBS += -L$$PWD -lvisa32
-#LIBS += -L$$PWD -lcvintwrk
 LIBS += -L$$PWD -lcvi
-#LIBS += -L$$PWD -lcviwmain
-#LIBS += -L$$PWD -lcvisupp
-#LIBS += -L$$PWD -lcvirt
 INCLUDEPATH += $$PWD
 
 # The following define makes your compiler emit warnings if you use
@@ -33,10 +28,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        CnvWid.cpp
+        CnvWid.cpp \
+    CustCNV.cpp \
+    CustCNVEditor.cpp
 
 HEADERS += \
-        CnvWid.h
+        CnvWid.h \
+    CustCNV.h \
+    CustCNVEditor.h
 
 FORMS += \
-        CnvWid.ui
+        CnvWid.ui \
+    CustCNVEditor.ui

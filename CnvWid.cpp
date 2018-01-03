@@ -97,4 +97,13 @@ CnvWid::CnvWid(QWidget *parent) :
     connect(ui.treeWidget, &QTreeWidget::itemActivated,[&](QTreeWidgetItem *item, int column){
         ui.label->setText(item->data(column,  Qt::UserRole).toString());
     });
+    connect(ui.pushButton, &QPushButton::clicked, [&](){
+        bool ok;
+        int iType = ui.treeWidget->currentItem()->text(2).toInt(&ok);
+        if(!ok)
+            return;
+        if(iType <CNVEmpty || iType > CNVStruct)
+            return;
+        Q_EMIT emitCNVPath(ui.treeWidget->currentItem()->data(0, Qt::UserRole).toString());
+    });
 }
