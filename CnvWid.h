@@ -3,9 +3,6 @@
 
 #include "ui_CnvWid.h"
 #include <cvinetv.h>
-#include <cvirte.h>
-#include <ansi_c.h>
-#include <utility.h>
 class CnvWid : public QWidget
 {
     Q_OBJECT
