@@ -11,7 +11,19 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = untitled41
 TEMPLATE = app
 LIBS += -L$$PWD -lcvinetv
-LIBS += -L$$PWD -lcvi
+LIBS += -L$$PWD \
+-lcvirt\
+    -lcviauto \
+    -lcviddc \
+    -lcvidotnet \
+    -lcvinetstreams \
+    -lcvinetv \
+    -lcvintwrk \
+    -lcvirt \
+    -lcvisupp \
+    -lcvitdms\
+        -lcvi
+LIBS += -L$$PWD -lcviauto
 INCLUDEPATH += $$PWD
 
 # The following define makes your compiler emit warnings if you use
@@ -30,13 +42,16 @@ SOURCES += \
         main.cpp \
         CnvWid.cpp \
     CustCNV.cpp \
-    CustCNVEditor.cpp
+    CustCNVEditor.cpp \
+    CustViewWid.cpp
 
 HEADERS += \
         CnvWid.h \
     CustCNV.h \
-    CustCNVEditor.h
+    CustCNVEditor.h \
+    CustViewWid.h
 
 FORMS += \
         CnvWid.ui \
-    CustCNVEditor.ui
+    CustCNVEditor.ui \
+    CustViewWid.ui

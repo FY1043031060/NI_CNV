@@ -59,7 +59,7 @@ void CustCNV::sendData(QVariant varData)
 void CustCNV::DataCallback(void *handle, CNVData data, void *callbackData)
 {
     CustCNV* pCnv = static_cast<CustCNV*>(callbackData);
-    unsigned int	nDims;
+    unsigned long	nDims;
     CNVDataType		type;
 
     if (data == 0)

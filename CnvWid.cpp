@@ -46,7 +46,7 @@ void CnvWid::searchRecursivly(CNVBrowser cnvbrowser, const char* strPath, QTreeW
         if(status == 1 && (eBroweType != CNVBrowseTypeUndefined))
         {
 #if 1
-            unsigned int	nDims;
+            unsigned long	nDims;
             CNVDataType		type;
             CNVGetDataType(typeData, &type, &nDims);
             if(nDims == 0)

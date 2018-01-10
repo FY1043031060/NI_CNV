@@ -2,10 +2,14 @@
 #include "CustCNV.h"
 #include "CnvWid.h"
 #include <QRegExp>
+#include "CustViewWid.h"
 CustCNVEditor::CustCNVEditor(QWidget *parent) :
     QWidget(parent), m_pCust(Q_NULLPTR)
 {
     ui.setupUi(this);
+    CustViewWid* pView = new CustViewWid;
+    pView->show();
+    return;
     CnvWid* wid = new CnvWid;
     wid->setParent(this, Qt::Window);
     wid->hide();
