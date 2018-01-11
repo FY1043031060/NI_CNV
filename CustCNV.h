@@ -39,11 +39,9 @@ class CustCNVManager : public QObject
 {
     Q_OBJECT
 public:
-    CustCNV* createCustCNV(QString str, QObject* parent = Q_NULLPTR);
+    CustCNV* createCustCNV(QString str, QObject* parent);
     void deleteCustCNV(CustCNV* pObj);
-    ~CustCNVManager() {
-        CNVFinish();
-    }
+    ~CustCNVManager();
     static CustCNVManager& getInstance(){
         static CustCNVManager instance;
         return instance;

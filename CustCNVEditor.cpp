@@ -36,7 +36,7 @@ void CustCNVEditor::onCNVPathChanged(QString str)
 //        delete m_pCust;
     }
 //    m_pCust = new CustCNV(str, this);
-    m_pCust = CustCNVManager::getInstance().createCustCNV(str);
+    m_pCust = CustCNVManager::getInstance().createCustCNV(str, this);
 
     connect(m_pCust,&CustCNV::recvData, [&](QVariant var){
         if(var.type() == QVariant::Double )

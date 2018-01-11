@@ -30,7 +30,6 @@ CustCNV::CustCNV(QString strValuePath, QObject *parent)
 CustCNV::~CustCNV()
 {
     DisposeSubscriber();
-//    CNVFinish();
 }
 ////
 /// \brief CustCNV::sendData
@@ -127,8 +126,13 @@ void CustCNV::DisposeSubscriber ()
 }
 
 CustCNV *CustCNVManager::createCustCNV(QString str, QObject *parent)
-{
-    auto pObj = new CustCNV(str, parent);
+{	CustCNV* pObj = Q_NULLPTR;
+    if(parent != Q_NULLPTR)
+        pObj = new CustCNV(str, parent);
+    else {
+        ////静态全局会导致析构顺序问题
+        pObj = new CustCNV(str, this);
+    }
     m_hash.insert(pObj, str);
     return pObj;
 }
@@ -136,5 +140,13 @@ CustCNV *CustCNVManager::createCustCNV(QString str, QObject *parent)
 void CustCNVManager::deleteCustCNV(CustCNV *pObj)
 {
     if(m_hash.contains(pObj))
+    {
         pObj->deleteLater();
+        m_hash.remove(pObj);
+    }
+}
+
+CustCNVManager::~CustCNVManager()
+{
+    CNVFinish();
 }
