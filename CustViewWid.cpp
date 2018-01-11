@@ -102,7 +102,11 @@ CustViewWid::CustViewWid(QWidget *parent) :
     QWidget(parent), m_pModel(new QStandardItemModel(this))
 {
     ui.setupUi(this);
-    ui.treeView->setModel(m_pModel);
+    QSortFilterProxyModel* m_pFilterModel = new QSortFilterProxyModel(this);
+    m_pFilterModel->setSourceModel(m_pModel);
+    ui.treeView->setModel(m_pFilterModel);
+//    m_pFilterModel->setFilterRole(Qt::DisplayRole);
+//    m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
     m_pModel->setHorizontalHeaderLabels(QStringList()<<QStringLiteral("名称")<<QStringLiteral("节点类型") <<QStringLiteral("数值类型"));
     int status = 0;
     CNVBrowser cnvbrowser;
@@ -124,6 +128,33 @@ CustViewWid::CustViewWid(QWidget *parent) :
             return;
         if(iType <CNVEmpty || iType > CNVStruct)
             return;
-        Q_EMIT emitCNVPath(ui.treeView->currentIndex().sibling(0, 0).data(Qt::UserRole).toString());
+        Q_EMIT emitCNVPath(ui.treeView->currentIndex().sibling(ui.treeView->currentIndex().row(), 0).data(Qt::UserRole).toString());
     });
 }
+
+//CustFilterProxyModel::CustFilterProxyModel(QObject *parent)
+//    : QSortFilterProxyModel(parent){}
+
+//bool CustFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+//{
+//    bool filter = QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+
+//    if (filter)
+//    {
+//        return true;
+//    }
+//    else
+//    {
+//        // check all decendant's
+//        QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
+//        for (int k=0; k<sourceModel()->rowCount(source_index); k++)
+//        {
+//            if (filterAcceptsRow(k, source_index))
+//            {
+//                return true;
+//            }
+//        }
+//    }
+
+//    return false;
+//}
