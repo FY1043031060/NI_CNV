@@ -31,7 +31,10 @@ void CustCNVEditor::onCNVPathChanged(QString str)
 {
     ui.labelCNVPath->setText(str);
     if(m_pCust != Q_NULLPTR)
-        m_pCust->deleteLater();
+    {
+//        m_pCust->deleteLater();
+        delete m_pCust;
+    }
     m_pCust = new CustCNV(str, this);
 
     connect(m_pCust,&CustCNV::recvData, [&](QVariant var){

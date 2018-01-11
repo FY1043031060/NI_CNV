@@ -32,6 +32,7 @@ private:
     QMutex m_mutexSend;
 
     void DisposeSubscriber();
+    Q_DISABLE_COPY(CustCNV)
 };
 
 #endif // CUSTCNV_H
