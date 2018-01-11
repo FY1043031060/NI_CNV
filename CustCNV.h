@@ -34,5 +34,23 @@ private:
     void DisposeSubscriber();
     Q_DISABLE_COPY(CustCNV)
 };
+#include <QHash>
+class CustCNVManager : public QObject
+{
+    Q_OBJECT
+public:
+    CustCNV* createCustCNV(QString str, QObject* parent = Q_NULLPTR);
+    void deleteCustCNV(CustCNV* pObj);
+    ~CustCNVManager() {
+        CNVFinish();
+    }
+    static CustCNVManager& getInstance(){
+        static CustCNVManager instance;
+        return instance;
+    }
+private:
+    explicit CustCNVManager(QObject* parent = Q_NULLPTR) : QObject(parent) {}
+    QHash<CustCNV*, QString> m_hash;
+};
 
 #endif // CUSTCNV_H

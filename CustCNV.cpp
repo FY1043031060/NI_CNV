@@ -30,7 +30,7 @@ CustCNV::CustCNV(QString strValuePath, QObject *parent)
 CustCNV::~CustCNV()
 {
     DisposeSubscriber();
-    CNVFinish();
+//    CNVFinish();
 }
 ////
 /// \brief CustCNV::sendData
@@ -124,4 +124,17 @@ void CustCNV::DisposeSubscriber ()
         CNVDispose(m_bufferSend);
         m_bufferSend = 0;
     }
+}
+
+CustCNV *CustCNVManager::createCustCNV(QString str, QObject *parent)
+{
+    auto pObj = new CustCNV(str, parent);
+    m_hash.insert(pObj, str);
+    return pObj;
+}
+
+void CustCNVManager::deleteCustCNV(CustCNV *pObj)
+{
+    if(m_hash.contains(pObj))
+        pObj->deleteLater();
 }
