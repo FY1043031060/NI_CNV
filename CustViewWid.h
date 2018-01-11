@@ -21,14 +21,15 @@ private:
     QStandardItemModel *m_pModel;
     void getErrorDescripter(int status);
 };
-//class CustFilterProxyModel: public QSortFilterProxyModel
-//{
-//    Q_OBJECT
-//public:
-//    explicit CustFilterProxyModel(QObject *parent = Q_NULLPTR);
-//protected:
-//    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+class CustFilterProxyModel: public QSortFilterProxyModel
+{
+    Q_OBJECT
 
-//}
+public:
+    explicit CustFilterProxyModel(QObject *parent = Q_NULLPTR);
+protected:
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+
+};
 
 #endif // CUSTVIEWWID_H
