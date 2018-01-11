@@ -67,7 +67,7 @@ void CustViewWid::searchRecursivly(CNVBrowser cnvbrowser,
             listPath.append(str);
             {
                 QStandardItem* pItem = new QStandardItem;
-                pItem->setData(QVariant::fromValue(str),Qt::UserRole);
+                pItem->setData(QVariant::fromValue(str), Qt::UserRole);
                 qDebug() << __FUNCTION__ << pItem->data(Qt::UserRole);
                 pItem->setText(strNameTmp);
                 QStandardItem* pItem1 = new QStandardItem;
@@ -112,19 +112,18 @@ CustViewWid::CustViewWid(QWidget *parent) :
     searchRecursivly(cnvbrowser, NULL, NULL);
     status = CNVDisposeBrowser(cnvbrowser);
     getErrorDescripter(status);
-//    connect(ui.treeWidget, &QTreeWidget::itemActivated,[&](QTreeWidgetItem *item, int column){
-//        ui.label->setText(item->data(column,  Qt::UserRole).toString());
-//    });
-//    connect(ui.pushButton, &QPushButton::clicked, [&](){
-//        bool ok;
-//        int iType = ui.treeWidget->currentItem()->text(2).toInt(&ok);
-//        if(!ok)
-//            return;
-//        if(iType <CNVEmpty || iType > CNVStruct)
-//            return;
-//        Q_EMIT emitCNVPath(ui.treeWidget->currentItem()->data(0, Qt::UserRole).toString());
-//    });
-    connect(m_pModel, &QStandardItemModel::itemChanged,[&](QStandardItem *item){
-//        ui.label->setText(item->data(column,  Qt::UserRole).toString());
+    connect(ui.treeView,&QAbstractItemView::clicked, [&](const QModelIndex &index){
+        qDebug() << index.data();
+        ui.label->setText(
+                    index.sibling(index.row(),0).data(Qt::UserRole).toString());
+    });
+    connect(ui.pushButton, &QPushButton::clicked, [&](){
+        bool ok;
+        int iType = ui.treeView->currentIndex().sibling(0, 2).data().toInt(&ok);
+        if(!ok)
+            return;
+        if(iType <CNVEmpty || iType > CNVStruct)
+            return;
+        Q_EMIT emitCNVPath(ui.treeView->currentIndex().sibling(0, 0).data(Qt::UserRole).toString());
     });
 }

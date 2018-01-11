@@ -6,10 +6,16 @@
 CustCNVEditor::CustCNVEditor(QWidget *parent) :
     QWidget(parent), m_pCust(Q_NULLPTR)
 {
+#if 1
     ui.setupUi(this);
     CustViewWid* pView = new CustViewWid;
-    pView->show();
-    return;
+    pView->setParent(this, Qt::Window);
+    pView->hide();
+    connect(pView, &CustViewWid::emitCNVPath,this, &CustCNVEditor::onCNVPathChanged);
+    connect(ui.pushButtonCfg,&QPushButton::clicked, [&](){
+        this->findChild<CustViewWid*>()->show();
+    });
+#else
     CnvWid* wid = new CnvWid;
     wid->setParent(this, Qt::Window);
     wid->hide();
@@ -18,6 +24,7 @@ CustCNVEditor::CustCNVEditor(QWidget *parent) :
 
        this->findChild<CnvWid*>()->show();
     });
+#endif
 }
 
 void CustCNVEditor::onCNVPathChanged(QString str)
