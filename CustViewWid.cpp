@@ -108,7 +108,8 @@ CustViewWid::CustViewWid(QWidget *parent) :
     ////TOO
     m_pFilterModel->setFilterRole(Qt::DisplayRole);
     m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
-
+    CustStyleItemDelegate* pDelegate = new CustStyleItemDelegate(this);
+    ui.treeView->setItemDelegate(pDelegate);
     m_pModel->setHorizontalHeaderLabels(QStringList()<<QStringLiteral("名称")<<QStringLiteral("节点类型") <<QStringLiteral("数值类型"));
     int status = 0;
     CNVBrowser cnvbrowser;
@@ -147,4 +148,110 @@ bool CustFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &s
     }
     else
         return true;
+}
+
+CustStyleItemDelegate::CustStyleItemDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
+{
+
+}
+#include <QPainter>
+void CustStyleItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (index.column() == 2)
+    {
+        if (option.state & QStyle::State_Selected)
+            painter->fillRect(option.rect, option.palette.highlight());
+        QString str;
+        switch(index.data().toInt())
+        {
+        case CNVEmpty:
+            str = "NULL";
+            break;
+        case CNVInt8:
+            str = "INT8";
+            break;
+        case CNVInt16:
+            str = "INT16";
+            break;
+        case CNVInt32:
+            str = "INT32";
+            break;
+        case CNVInt64:
+            str = "INT64";
+            break;
+        case CNVUInt8:
+            str = "UINT8";
+            break;
+        case CNVUInt16:
+            str = "UINT16";
+            break;
+        case CNVUInt32:
+            str = "UINT32";
+            break;
+        case CNVUInt64:
+            str = "UINT64";
+            break;
+        case CNVBool:
+            str = "BOOL";
+            break;
+        case CNVSingle:
+            str = "SINGLE";
+            break;
+        case CNVDouble:
+            str = "DOUBLE";
+            break;
+        case CNVString:
+            str = "STRING";
+            break;
+        case CNVStruct:
+            str = "STRUCT";
+            break;
+        case CNVDataType4Bytes:
+            str = "4BYTES";
+            break;
+        default:
+            str = "NULL";
+        }
+        painter->drawText(option.rect, str);
+    }
+    else if(index.column() == 1)
+    {
+        QString str;
+        switch(index.data().toInt())
+        {
+
+        case CNVBrowseTypeUndefined:
+            str = QStringLiteral("Undefined");
+            break;
+        case CNVBrowseTypeMachine:
+            str = QStringLiteral("Machine");
+            break;
+        case CNVBrowseTypeProcess:
+            str = QStringLiteral("Process");
+            break;
+        case CNVBrowseTypeFolder:
+            str = QStringLiteral("Folder");
+            break;
+        case CNVBrowseTypeItem:
+            str = QStringLiteral("Item");
+            break;
+        case CNVBrowseTypeItemRange:
+            str = QStringLiteral("ItemRange");
+            break;
+        case CNVBrowseTypeImplicitItem:
+            str = QStringLiteral("ImplicitItem");
+            break;
+        case CNVBrowseType4Bytes:
+            str = QStringLiteral("4Bytes");
+            break;
+        default:
+            str = "NULL";
+        }
+        painter->drawText(option.rect, str);
+    }
+    else
+    {
+        QStyledItemDelegate::paint(painter, option, index);
+    }
 }

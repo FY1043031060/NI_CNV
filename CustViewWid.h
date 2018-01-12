@@ -4,6 +4,7 @@
 #include "ui_CustViewWid.h"
 #include <cvinetv.h>
 #include <QSortFilterProxyModel>
+#include <QStyledItemDelegate>
 class QStandardItemModel;
 class QStandardItem;
 class CustFilterProxyModel;
@@ -29,6 +30,15 @@ public:
     explicit CustFilterProxyModel(QObject *parent = Q_NULLPTR);
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+
+};
+class CustStyleItemDelegate :public QStyledItemDelegate
+{
+    Q_OBJECT
+public:
+    explicit CustStyleItemDelegate(QObject *parent = Q_NULLPTR);
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 };
 
