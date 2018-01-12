@@ -105,9 +105,9 @@ CustViewWid::CustViewWid(QWidget *parent) :
     CustFilterProxyModel* m_pFilterModel = new CustFilterProxyModel(this);
     m_pFilterModel->setSourceModel(m_pModel);
     ui.treeView->setModel(m_pFilterModel);
-
-//    m_pFilterModel->setFilterRole(Qt::DisplayRole);
-//    m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
+    ////TOO
+    m_pFilterModel->setFilterRole(Qt::DisplayRole);
+    m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
 
     m_pModel->setHorizontalHeaderLabels(QStringList()<<QStringLiteral("名称")<<QStringLiteral("节点类型") <<QStringLiteral("数值类型"));
     int status = 0;
@@ -139,5 +139,12 @@ CustFilterProxyModel::CustFilterProxyModel(QObject *parent)
 
 bool CustFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+    ////根据需求过滤，并指定对应的节点
+    qDebug() <<__FUNCTION__<<  source_row << source_parent << source_parent.data();
+    if(!source_parent.isValid())
+    {
+        return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+    }
+    else
+        return true;
 }
