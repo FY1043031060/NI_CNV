@@ -73,7 +73,7 @@ void CustViewWid::searchRecursivly(CNVBrowser cnvbrowser,
                 QStandardItem* pItem1 = new QStandardItem;
                 pItem1->setText(QString("%1").arg(eBroweType));
                 QStandardItem* pItem2 = new QStandardItem;
-                pItem2->setData(QString("%1").arg(type));
+                pItem2->setText(QString("%1").arg(type));
                 QStandardItem* pItem3 = new QStandardItem;
                 {
                     if(type <= CNVString && type >= CNVInt8)
@@ -181,7 +181,7 @@ void CustStyleItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
         QString str;
-        switch(index.data(Qt::UserRole+1).toInt())
+        switch(index.data().toInt())
         {
         case CNVEmpty:
             str = "NULL";
@@ -285,7 +285,7 @@ void CustStyleItemDelegate::setModelData(QWidget *editor,
         auto indexData = index.parent().sibling(index.row(), 2).data();
         qDebug() << index.parent() << index.parent().sibling(0,0).data() << index.parent().sibling(0,2).data(Qt::UserRole+1);
 
-        eType = static_cast<CNVDataType>(index.sibling(index.row(), 2).data(Qt::UserRole+1).toInt());
+        eType = static_cast<CNVDataType>(index.sibling(index.row(), 2).data().toInt());
         pWid = qobject_cast<QLineEdit*>(editor);
         if(pWid == Q_NULLPTR)
             return;
