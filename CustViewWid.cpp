@@ -128,7 +128,10 @@ CustViewWid::CustViewWid(QWidget *parent) :
     m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
     CustStyleItemDelegate* pDelegate = new CustStyleItemDelegate(this);
     ui.treeView->setItemDelegate(pDelegate);
-    m_pModel->setHorizontalHeaderLabels(QStringList()<<QStringLiteral("名称")<<QStringLiteral("节点类型") <<QStringLiteral("数值类型"));
+    m_pModel->setHorizontalHeaderLabels(QStringList()<<QStringLiteral("名称")
+                                        <<QStringLiteral("节点类型")
+                                        <<QStringLiteral("数值类型")
+                                        <<QStringLiteral("数据"));
     int status = 0;
     CNVBrowser cnvbrowser;
     status = CNVCreateBrowser(&cnvbrowser);
