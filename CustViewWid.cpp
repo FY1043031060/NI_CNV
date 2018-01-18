@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QTreeWidgetItem>
 #include <QHash>
+#include <CustCNV.h>
+#include <QLineEdit>
 void CustViewWid::getErrorDescripter(int status)
 {
     if(status < 0)
@@ -13,8 +15,6 @@ void CustViewWid::searchRecursivly(CNVBrowser cnvbrowser,
                                    const char* strPath,
                                    QStandardItem* pParentItem)
 {
-//    if(pParentItem != Q_NULLPTR)
-//        qDebug() << __FUNCTION__<<pParentItem->text();
     int status = 0;
     int leaf = 0;
     char* strName = 0;
@@ -73,18 +73,29 @@ void CustViewWid::searchRecursivly(CNVBrowser cnvbrowser,
                 QStandardItem* pItem1 = new QStandardItem;
                 pItem1->setText(QString("%1").arg(eBroweType));
                 QStandardItem* pItem2 = new QStandardItem;
-                pItem2->setText(QString("%1").arg(type));
-
+                pItem2->setData(QString("%1").arg(type));
+                QStandardItem* pItem3 = new QStandardItem;
+                {
+                    if(type <= CNVString && type >= CNVInt8)
+                    {
+                        auto pCNV = new CustCNV(str, this);
+                        pItem3->setData(QVariant::fromValue(pCNV));
+                        m_hash.insert(pItem3, pCNV);
+                        BridgeCnvItem* pBridge = new BridgeCnvItem(pCNV, pItem3, this);
+                    }
+                }
                 if(pParentItem == Q_NULLPTR)
                 {
                     m_pModel->appendRow(pItem);
                     m_pModel->setItem(pItem->index().row(),1, pItem1);
                     m_pModel->setItem(pItem->index().row(),2, pItem2);
+                    m_pModel->setItem(pItem->index().row(),3, pItem3);
                 }else
                 {
                     pParentItem->appendRow(pItem);
                     pParentItem->setChild(pItem->index().row(),1, pItem1);
-                    pParentItem->setChild(pItem->index().row(),2,pItem2);
+                    pParentItem->setChild(pItem->index().row(),2, pItem2);
+                    pParentItem->setChild(pItem->index().row(),3, pItem3);
                 }
                 qDebug() << pItem->text();
                 hashPath.insert(str, pItem);
@@ -92,10 +103,17 @@ void CustViewWid::searchRecursivly(CNVBrowser cnvbrowser,
         }
         CNVFreeMemory(strName);
     }
+    ////NOTE::递归所有当前节点
+    /// 按层递归
     for(int index = 0; index < hashPath.size(); index++)
     {
         searchRecursivly(cnvbrowser, listPath.value(index).toLocal8Bit().data(), hashPath.value(listPath.value(index)));
     }
+}
+
+const CustCNV *CustViewWid::getCustCNV(QStandardItem *pItem)
+{
+    return m_hash.value(pItem, Q_NULLPTR);
 }
 
 CustViewWid::CustViewWid(QWidget *parent) :
@@ -105,7 +123,7 @@ CustViewWid::CustViewWid(QWidget *parent) :
     CustFilterProxyModel* m_pFilterModel = new CustFilterProxyModel(this);
     m_pFilterModel->setSourceModel(m_pModel);
     ui.treeView->setModel(m_pFilterModel);
-    ////TOO
+
     m_pFilterModel->setFilterRole(Qt::DisplayRole);
     m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
     CustStyleItemDelegate* pDelegate = new CustStyleItemDelegate(this);
@@ -163,7 +181,7 @@ void CustStyleItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
         QString str;
-        switch(index.data().toInt())
+        switch(index.data(Qt::UserRole+1).toInt())
         {
         case CNVEmpty:
             str = "NULL";
@@ -254,4 +272,67 @@ void CustStyleItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     {
         QStyledItemDelegate::paint(painter, option, index);
     }
+}
+
+void CustStyleItemDelegate::setModelData(QWidget *editor,
+                                         QAbstractItemModel *model,
+                                         const QModelIndex &index) const
+{
+    QLineEdit* pWid = Q_NULLPTR;
+    if(index.column() == 3)
+    {
+        CNVDataType eType = CNVEmpty;
+        auto indexData = index.parent().sibling(index.row(), 2).data();
+        qDebug() << index.parent() << index.parent().sibling(0,0).data() << index.parent().sibling(0,2).data(Qt::UserRole+1);
+
+        eType = static_cast<CNVDataType>(index.sibling(index.row(), 2).data(Qt::UserRole+1).toInt());
+        pWid = qobject_cast<QLineEdit*>(editor);
+        if(pWid == Q_NULLPTR)
+            return;
+        QVariant data;
+        switch (eType) {
+        case CNVDouble:
+            data = pWid->text().trimmed().toDouble();
+            break;
+        default:
+            break;
+        }
+        auto pCustCNV = index.data(Qt::UserRole+1).value<CustCNV*>();
+        if(pCustCNV != Q_NULLPTR)
+            pCustCNV->sendData(data);
+    }
+    else
+        return QStyledItemDelegate::setModelData(editor, model, index);
+}
+
+QWidget *CustStyleItemDelegate::createEditor(QWidget *parent,
+                                             const QStyleOptionViewItem &option,
+                                             const QModelIndex &index) const
+{
+    if(index.column() == 3)
+    {
+        qDebug() << __FUNCTION__;
+    }
+    return QStyledItemDelegate::createEditor(parent, option, index);
+}
+
+void CustStyleItemDelegate::setEditorData(QWidget *editor,
+                                          const QModelIndex &index) const
+{
+    if(index.column() == 3)
+    {
+        qDebug() << __FUNCTION__ << editor->metaObject()->className();
+    }
+    return QStyledItemDelegate::setEditorData(editor, index);
+}
+
+BridgeCnvItem::BridgeCnvItem(CustCNV *pCNV, QStandardItem *pItem, QObject *parent)
+    : QObject(parent), m_pCnv(pCNV), m_pItem(pItem)
+{
+    connect(pCNV, &CustCNV::recvData, [&](QVariant var){
+        if(m_pItem == Q_NULLPTR)
+            return;
+        QString str = var.toString();
+        m_pItem->setText(str);
+    });
 }
