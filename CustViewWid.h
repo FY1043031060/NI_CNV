@@ -12,18 +12,26 @@ class QStandardItem;
 class CustFilterProxyModel;
 class CustCNV;
 
-class CustViewWid : public QWidget
+class CustViewWid : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit CustViewWid(QWidget *parent = 0);
-    void searchRecursivly(CNVBrowser cnvbrowser, const char *strPath, QStandardItem *pParentItem);
-    const CustCNV* getCustCNV(QStandardItem* pItem);
+    static CustViewWid& getInstance()
+    {
+        static CustViewWid instance;
+        return instance;
+    }
+
+    QStandardItemModel *getSourceModel() const;
+
 Q_SIGNALS:
     void emitCNVPath(QString strPath);
+
 private:
-    Ui::CustViewWid ui;
+    explicit CustViewWid(QWidget *parent = 0);
+    void searchRecursivly(CNVBrowser cnvbrowser, const char *strPath, QStandardItem *pParentItem);
+
+private:
     QStandardItemModel *m_pModel;
     void getErrorDescripter(int status);
 

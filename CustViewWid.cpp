@@ -111,23 +111,14 @@ void CustViewWid::searchRecursivly(CNVBrowser cnvbrowser,
     }
 }
 
-const CustCNV *CustViewWid::getCustCNV(QStandardItem *pItem)
+QStandardItemModel *CustViewWid::getSourceModel() const
 {
-    return m_hash.value(pItem, Q_NULLPTR);
+    return m_pModel;
 }
 
 CustViewWid::CustViewWid(QWidget *parent) :
-    QWidget(parent), m_pModel(new QStandardItemModel(this))
+    QObject(parent), m_pModel(new QStandardItemModel(this))
 {
-    ui.setupUi(this);
-    CustFilterProxyModel* m_pFilterModel = new CustFilterProxyModel(this);
-    m_pFilterModel->setSourceModel(m_pModel);
-    ui.treeView->setModel(m_pFilterModel);
-
-    m_pFilterModel->setFilterRole(Qt::DisplayRole);
-    m_pFilterModel->setFilterRegExp(QStringLiteral("DESKTOP-E6DSLSR"));
-    CustStyleItemDelegate* pDelegate = new CustStyleItemDelegate(this);
-    ui.treeView->setItemDelegate(pDelegate);
     m_pModel->setHorizontalHeaderLabels(QStringList()<<QStringLiteral("名称")
                                         <<QStringLiteral("节点类型")
                                         <<QStringLiteral("数值类型")
@@ -140,20 +131,7 @@ CustViewWid::CustViewWid(QWidget *parent) :
     searchRecursivly(cnvbrowser, NULL, NULL);
     status = CNVDisposeBrowser(cnvbrowser);
     getErrorDescripter(status);
-    connect(ui.treeView,&QAbstractItemView::clicked, [&](const QModelIndex &index){
-        qDebug() << index.data();
-        ui.label->setText(
-                    index.sibling(index.row(),0).data(Qt::UserRole).toString());
-    });
-    connect(ui.pushButton, &QPushButton::clicked, [&](){
-        bool ok;
-        int iType = ui.treeView->currentIndex().sibling(0, 2).data().toInt(&ok);
-        if(!ok)
-            return;
-        if(iType <CNVEmpty || iType > CNVStruct)
-            return;
-        Q_EMIT emitCNVPath(ui.treeView->currentIndex().sibling(ui.treeView->currentIndex().row(), 0).data(Qt::UserRole).toString());
-    });
+
 }
 
 CustFilterProxyModel::CustFilterProxyModel(QObject *parent)
@@ -163,7 +141,12 @@ bool CustFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &s
 {
     ////根据需求过滤，并指定对应的节点
     qDebug() <<__FUNCTION__<<  source_row << source_parent << source_parent.data();
-    if(!source_parent.isValid())
+//    if(!source_parent.isValid())
+    auto val = sourceModel()->index(source_row, 1, source_parent).data();
+    bool ok;
+    int iType = val.toInt(&ok);
+
+    if( iType == CNVBrowseTypeProcess)
     {
         return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
     }

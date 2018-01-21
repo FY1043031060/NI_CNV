@@ -40,18 +40,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        CnvWid.cpp \
     CustCNV.cpp \
-    CustCNVEditor.cpp \
-    CustViewWid.cpp
+    CustViewWid.cpp \
+    CCnvProxyView.cpp
 
 HEADERS += \
-        CnvWid.h \
     CustCNV.h \
-    CustCNVEditor.h \
-    CustViewWid.h
+    CustViewWid.h \
+    CCnvProxyView.h
 
 FORMS += \
         CnvWid.ui \
     CustCNVEditor.ui \
-    CustViewWid.ui
+    CustViewWid.ui \
+    CCnvProxyView.ui

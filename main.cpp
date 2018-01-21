@@ -1,12 +1,10 @@
 #include <QApplication>
-#include <CustCNVEditor.h>
 #include <CustViewWid.h>
+#include <CCnvProxyView.h>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CustCNVEditor w;
-    w.show();
-    CustViewWid m;
+    CCnvProxyView m;
     m.show();
     return a.exec();
 }
