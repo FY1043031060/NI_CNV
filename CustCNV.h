@@ -26,8 +26,8 @@ private:
     static void CVICALLBACK StatusCallback (void * handle,
                                             CNVConnectionStatus status,
                                             int error, void * callbackData);
-    CNVSubscriber m_subscriberRecv;
-    CNVBufferedWriter m_bufferSend;
+    CNVSubscriber m_subscriberRecv = NULL;
+    CNVBufferedWriter m_bufferSend = NULL;
     QString m_strValuePath;
     QMutex m_mutexSend;
 
